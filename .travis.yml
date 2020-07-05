@@ -1,0 +1,39 @@
+sudo: required
+language: generic 
+services:
+  - docker
+
+before_install:
+  - docker build -t techup/microservices-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true techup/microservices-test npm test
+
+after_success:
+  - docker build -t techup/multi-client ./client
+  - docker build -t techup/multi-nginx ./nginx
+  - docker build -t techup/multi-api ./api
+  - docker build -t techup/multi-worker ./worker
+  # Log In to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Subindo as imagens para o DockerHub
+  - docker push techup/multi-client
+  - docker push techup/multi-nginx
+  - docker push techup/multi-api
+  - docker push techup/multi-worker
+
+
+
+
+# deploy:
+#   provider: elasticbeanstalk
+#   region: "us-east-1"
+#   app: "DockerReact"
+#   env: "DockerReact-env"
+#   bucket_name: "elasticbeanstalk-us-east-1-891613447608"
+#   bucket_path: "DockerReact"
+#   on:
+#     branch: master
+#   access_key_id: $access_key_id
+#   secret_access_key: $secret_access_key
+#   session_token: $session_token
