@@ -4,23 +4,23 @@ services:
   - docker
 
 before_install:
-  - docker build -t techup/microservices-test -f ./client/Dockerfile.dev ./client
+  - docker build -t joaogameprog/microservices-test -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run -e CI=true techup/microservices-test npm test
+  - docker run -e CI=true joaogameprog/microservices-test npm test
 
 after_success:
-  - docker build -t techup/multi-client ./client
-  - docker build -t techup/multi-nginx ./nginx
-  - docker build -t techup/multi-api ./api
-  - docker build -t techup/multi-worker ./worker
+  - docker build -t joaogameprog/multi-client ./client
+  - docker build -t joaogameprog/multi-nginx ./nginx
+  - docker build -t joaogameprog/multi-api ./api
+  - docker build -t joaogameprog/multi-worker ./worker
   # Log In to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Subindo as imagens para o DockerHub
-  - docker push techup/multi-client
-  - docker push techup/multi-nginx
-  - docker push techup/multi-api
-  - docker push techup/multi-worker
+  - docker push joaogameprog/multi-client
+  - docker push joaogameprog/multi-nginx
+  - docker push joaogameprog/multi-api
+  - docker push joaogameprog/multi-worker
 
 
 
